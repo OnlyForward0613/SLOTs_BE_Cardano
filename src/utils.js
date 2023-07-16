@@ -30,23 +30,14 @@ export const blockFrost = new Blockfrost(
   config.BLOCKFROST_API_KEY,
 )
 
-let lucid;
+export const lucid = await Lucid.new(
+  blockFrost,
+  config.CARDANO_NETWORK == 0 ? config.PREVIEW_OR_PREPROD : 'Mainnet'
+)
 
-export const setConfig = async () =>{
-  console.log("1")
-  lucid = await Lucid.new(
-    blockFrost,
-    config.CARDANO_NETWORK === 0 ? 'Preprod' : 'Mainnet'
-  )
-  console.log("2")
-
-  lucid.selectWalletFromPrivateKey(process.env.PRIVATE_KEY);
-  console.log("3")
-
-}
+lucid.selectWalletFromPrivateKey(process.env.PRIVATE_KEY);
 
 export const sendAdaFromProject = async (addr, amt) => {
-  await setConfig();
   console.log("4")
 
   console.log("sendAdaFromProject,", addr, await lucid.wallet.address());
@@ -65,7 +56,6 @@ export const sendAdaFromProject = async (addr, amt) => {
 }
 
 export const sendTokenFromProject = async (addr, amt, policyId) => {
-  await setConfig();
 
   console.log("sendAdaFromProject,", addr, await lucid.wallet.address());
   const amount = BigInt(Number(amt) * 1000000);
