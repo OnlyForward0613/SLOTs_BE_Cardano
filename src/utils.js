@@ -38,21 +38,25 @@ export const lucid = await Lucid.new(
 lucid.selectWalletFromPrivateKey(process.env.PRIVATE_KEY);
 
 export const sendAdaFromProject = async (addr, amt) => {
-  console.log("4")
 
-  console.log("sendAdaFromProject,", addr, await lucid.wallet.address());
-  const amount = BigInt(Number(amt) * 1000000);
-  console.log("5")
-
-  const tx = await lucid
-      .newTx()
-      .payToAddress(addr, { lovelace: amount })
-      .complete();
-
-  const signedTx = await tx.sign().complete();
-  const txHash = await signedTx.submit();
-  console.log(txHash)
-  return txHash;
+  try {
+    console.log("sendAdaFromProject,", addr, await lucid.wallet.address());
+    
+    const amount = BigInt(Number(amt) * 1000000);
+    const tx = await lucid
+        .newTx()
+        .payToAddress(addr, { lovelace: amount })
+        .complete();
+  
+    const signedTx = await tx.sign().complete();
+    const txHash = await signedTx.submit();
+    console.log("txHash::: ", txHash);
+    return txHash;
+    
+  } catch (error) {
+    console.log(error, ">>>>>>>>>Error in sending ADA");
+    return error
+  }
 }
 
 export const sendTokenFromProject = async (addr, amt, policyId) => {

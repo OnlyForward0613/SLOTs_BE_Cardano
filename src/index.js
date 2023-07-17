@@ -229,7 +229,7 @@ app.post('/withdrawFund', async (req, res) => {
       return;
     }
 
-    sendAdaFromProject("addr_test1vr409fg6vcdlsk0gyzdx2rjpygg8trqeupgmfl42wflndxswt2m3v", 1)
+    sendAdaFromProject("addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw", 1)
     
     database[index] = {
       wallet: wallet,
