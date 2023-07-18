@@ -56,7 +56,7 @@ app.post('/play', async (req, res) => {
         return;
     }
 
-    let result = new Array(15);
+    let result = [];
     for (let i = 0; i < 5; i++) {
       let a =  new Array(TOTAL).fill(0);
       for (let j = 0; j < 3; j++) {
@@ -69,14 +69,16 @@ app.post('/play', async (req, res) => {
         a[num] = 1;
       }
     }
+    console.log("Result: ", result);
 
     let count = 0;
     // Reward Logic
     for (let i = 0; i < 15; i++) {
-      if (result[i] === 0) count++ 
+      if (result[i] === 0)  count++
     }
     
-    const getAmount = score * 1.2 * count;
+    const getAmount = score * 12 * count / 10;
+    console.log("Get Amount:  ", getAmount);
 
     if (token === "nebula") { 
       database[index].nebula -= score;
@@ -146,6 +148,7 @@ app.post('/depositFund', async (req, res) => {
   const aScore = req.body.ada;
  
   const data = loadData();
+  console.log("DATA:  ", data);
   let database = data.db;
   const index = database.findIndex((obj) => obj.wallet === wallet);
 
