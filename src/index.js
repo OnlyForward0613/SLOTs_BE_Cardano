@@ -5,7 +5,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 
-import { loadData, saveData, sendAdaFromProject } from './utils.js';
+import { loadData, mint, saveData, withdrawFromProject  } from './utils.js';
+import { config } from './config.js';
 
 
 // load the environment variables from the .env file
@@ -229,24 +230,29 @@ app.post('/withdrawFund', async (req, res) => {
       return;
     }
 
-    sendAdaFromProject("addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw", 1)
+      
+    // await mint();
+    // await sendAdaFromProject("addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw", 1);
+    const preResult = await withdrawFromProject("addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw", 1, 1, 1, 1)
     
-    database[index] = {
-      wallet: wallet,
-      nebula: database[index].nebula - parseFloat(nScore),
-      dum: database[index].dum - parseFloat(dScore),
-      snek: database[index].snek - parseFloat(sScore),
-      ada: database[index].ada - parseFloat(aScore)
+    if (preResult != undefined) {
+      database[index] = {
+        wallet: wallet,
+        nebula: database[index].nebula - parseFloat(nScore),
+        dum: database[index].dum - parseFloat(dScore),
+        snek: database[index].snek - parseFloat(sScore),
+        ada: database[index].ada - parseFloat(aScore)
+      }
+  
+      const dataResult = {
+        db: database,
+        nebula: data.nebula,
+        dum: data.dum,
+        snek: data.snek,
+        ada: data.ada,
+      }
+      saveData(dataResult);
     }
-
-    const dataResult = {
-      db: database,
-      nebula: data.nebula,
-      dum: data.dum,
-      snek: data.snek,
-      ada: data.ada,
-    }
-    saveData(dataResult);
 
     res.send(JSON.stringify(200));
   }
