@@ -71,19 +71,31 @@ app.post('/play', async (req, res) => {
     }
     console.log("Result: ", result);
 
-    let count = 0;
+    let maxCount = 0;
     // Reward Logic
     for (let i = 0; i < 15; i++) {
-      if (result[i] === 0)  count++
+      let count = 0;
+      if (result[i] === 0)  {
+        do {
+          console.log("ID:   ", i)
+          i += 3;
+          count++
+        } while(result[i] == 0)
+      }
+
+      if (maxCount < count) maxCount = count;
     }
+    console.log(maxCount);
     
-    const getAmount = score * 12 * count / 10;
+    const getAmount = score * 12 * (maxCount - 1) / 10;
     console.log("Get Amount:  ", getAmount);
 
     if (token === "nebula") { 
       database[index].nebula -= score;
       database[index].ada -= 1;
+      console.log("POST: ", database[index].nebula);
       database[index].nebula += getAmount;
+      console.log("NEXT: ", database[index].nebula);
       nebulaBase -= getAmount;
       adaBase += 1;
     }
@@ -116,7 +128,22 @@ app.post('/play', async (req, res) => {
 
     saveData(dataResult);
 
-    res.send(JSON.stringify(result ? result : -200))
+    const totalResult  = {
+      bet: {
+        betAmount: score,
+        multiplier: 12 * (maxCount - 1)/ 10,
+        getAmount: getAmount
+      },
+      result: result,
+      userData: {
+        ada: database[index].ada,
+        nebula: database[index].nebula,
+        dum: database[index].dum,
+        snek: database[index].nebula
+      }
+    }
+
+    res.send(JSON.stringify(totalResult ? totalResult : -200))
     
     return;
   } catch (error) {
