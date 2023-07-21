@@ -1,1 +1,1 @@
-# SLOTs_BE_Cardano
+# cardano-slot-backend
