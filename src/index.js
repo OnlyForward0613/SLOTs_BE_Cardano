@@ -87,7 +87,7 @@ app.post('/play', async (req, res) => {
     }
     console.log(maxCount);
     
-    const getAmount = score * 12 * (maxCount - 1) / 10;
+    const getAmount = maxCount > 1 ? score * 12 * (maxCount - 1) / 10 : 0;
     console.log("Get Amount:  ", getAmount);
 
     if (token === "nebula") { 
@@ -131,7 +131,7 @@ app.post('/play', async (req, res) => {
     const totalResult  = {
       bet: {
         betAmount: score,
-        multiplier: 12 * (maxCount - 1)/ 10,
+        multiplier: maxCount > 1 ? 12 * (maxCount - 1)/ 10 : 0,
         getAmount: getAmount
       },
       result: result,
@@ -263,7 +263,7 @@ app.post('/withdrawFund', async (req, res) => {
       
     // await mint();
     // await sendAdaFromProject("addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw", 1);
-    const preResult = await withdrawFromProject("addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw", 1, 1, 1, 1)
+    const preResult = await withdrawFromProject(wallet, aScore, nScore, dScore, sScore)
     
     if (preResult != undefined) {
       database[index] = {
